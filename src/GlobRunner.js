@@ -2,7 +2,7 @@ function TestHook(Glob,Q){
     Glob = Glob || require('glob').Glob;
     Q = Q || require('q');
 
-return function GlobRunner(/*SyncedFileCollection*/ collection){
+return function GlobRunner(root, /*SyncedFileCollection*/ collection){
     var patterns = [];
     var globs = [];
 
@@ -27,13 +27,13 @@ return function GlobRunner(/*SyncedFileCollection*/ collection){
     }
 
     function onMatch(filePath){
-        collection.foundFile(filePath);
+        collection.foundFile(filePath.replace(new RegExp('^' + root), ''));
     }
 
     var globsDone=[];
 
     function createGlob(pattern){
-        var glob =  new Glob(pattern);
+        var glob =  new Glob(root + pattern);
         globs.push(glob);
 
         glob.on('match',onMatch);

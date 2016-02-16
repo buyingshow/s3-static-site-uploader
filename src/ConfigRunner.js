@@ -17,13 +17,14 @@ return function ConfigRunner(){
 
     this.run = function(){
 
-        AWS.config.loadFromPath(config.credentials);
+        config.credentials && AWS.config.loadFromPath(config.credentials);
+        config.region && AWS.config.update({region: config.region});
 
         var s3 = new S3();
         var s3Wrapper = new S3PromiseWrapper(s3);
 
-        var collection = new SyncedFileCollection();
-        var globRunner = new GlobRunner(collection);
+        var collection = new SyncedFileCollection(config.root);
+        var globRunner = new GlobRunner(config.root, collection);
         var remoteRunner = new RemoteRunner(config.bucketName,collection,s3Wrapper);
 
         var patterns = config.patterns;
@@ -46,7 +47,7 @@ return function ConfigRunner(){
                         deletes.push(obj.path);
                         break;
                     case 'upload':
-                        fileUtils.getContents(obj.path).then(function(contents){
+                        fileUtils.getContents(config.root + obj.path).then(function(contents){
                             console.log('uploading: ' + obj.path);
                             s3Wrapper.putObject(config.bucketName,obj.path,contents).then(function(){
                                 console.log('done uploading: ' + obj.path);

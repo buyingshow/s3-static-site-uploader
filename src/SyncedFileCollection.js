@@ -2,7 +2,7 @@ function TestHook(SyncedFile,Q)   {
 SyncedFile = SyncedFile || require('./SyncedFile.js');
 Q = Q || require('q');
 
-return function SyncedFileCollection(){
+return function SyncedFileCollection(root){
 
     var map = {};
     var actions = [];
@@ -10,7 +10,7 @@ return function SyncedFileCollection(){
     function get(path){
         var obj = map[path];
         if(!obj){
-            obj = map[path] = new SyncedFile(path);
+            obj = map[path] = new SyncedFile(root, path);
             actions.push(obj.action);
             if(isGlobDone){
                 obj.globDone();
