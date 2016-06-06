@@ -25,7 +25,6 @@ var createParams = {
         };
     },
     putObject:function(bucketName, key, body, maxAge){
-        maxAge = maxAge ? 'max-age=' + maxAge : null
         // console.log(body);
         return {
             Bucket:bucketName,
