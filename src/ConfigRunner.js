@@ -49,7 +49,8 @@ return function ConfigRunner(){
                     case 'upload':
                         fileUtils.getContents(config.root + obj.path).then(function(contents){
                             console.log('uploading: ' + obj.path);
-                            s3Wrapper.putObject(config.bucketName,obj.path,contents).then(function(){
+                            var maxAge =  obj.path === 'index.html' ? 600 : null
+                            s3Wrapper.putObject(config.bucketName,obj.path,contents,maxAge).then(function(){
                                 console.log('done uploading: ' + obj.path);
                             },function(reason){
                                 console.log('error uploading: ' + obj.path);

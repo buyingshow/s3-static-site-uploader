@@ -24,15 +24,15 @@ var createParams = {
             Policy:policyString
         };
     },
-    putObject:function(bucketName, key, body, mimeType){
-        mimeType = mimeType || mime.lookup(key);
-
+    putObject:function(bucketName, key, body, maxAge){
+        maxAge = maxAge ? 'max-age=' + maxAge : null
         // console.log(body);
         return {
             Bucket:bucketName,
             Key: key,
             Body: body,//new Buffer(body),
-            ContentType: mimeType
+            ContentType: mime.lookup(key),
+            CacheControl: maxAge
         };
     },
     putBucketWebsite:function(bucketName,index,error) {
